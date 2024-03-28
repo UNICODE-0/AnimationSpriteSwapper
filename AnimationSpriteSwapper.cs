@@ -11,10 +11,6 @@ public class AnimationSpriteSwapper : EditorWindow
     private AnimationClip _animationClip;
     private Sprite _oldSprite;
     private Sprite _newSprite;
-    private bool _isPathBySprite = true;
-
-    private string _oldPath = "";
-    private string _newPath = "";
 
     private List<Texture2D> _oldImages = new List<Texture2D>();
     private List<Texture2D> _newImages = new List<Texture2D>();
@@ -40,22 +36,17 @@ public class AnimationSpriteSwapper : EditorWindow
         if(!_isStylesInited) InitStyles();
 
         _animationClip = (AnimationClip)EditorGUILayout.ObjectField("Animation Clip", _animationClip, typeof(AnimationClip), false);
-
-        _isPathBySprite = GUILayout.Toggle(_isPathBySprite, "Use sprite path");
-       
         GUILayout.BeginHorizontal();
 
         GUILayout.FlexibleSpace();
         GUILayout.BeginVertical();
         GUILayout.Label("Old path:");
-        if(_isPathBySprite) _oldSprite = (Sprite)EditorGUILayout.ObjectField("", _oldSprite, typeof(Sprite), false, GUILayout.Width(60));
-        else _oldPath = GUILayout.TextArea(_oldPath);
+        _oldSprite = (Sprite)EditorGUILayout.ObjectField("", _oldSprite, typeof(Sprite), false, GUILayout.Width(60));
         GUILayout.EndVertical();
         
         GUILayout.BeginVertical();
         GUILayout.Label("New path:");
-        if(_isPathBySprite) _newSprite = (Sprite)EditorGUILayout.ObjectField("", _newSprite, typeof(Sprite), false, GUILayout.Width(60));
-        else _newPath = GUILayout.TextArea(_newPath);
+        _newSprite = (Sprite)EditorGUILayout.ObjectField("", _newSprite, typeof(Sprite), false, GUILayout.Width(60));
         GUILayout.EndVertical();
         GUILayout.FlexibleSpace();
 
@@ -107,17 +98,8 @@ public class AnimationSpriteSwapper : EditorWindow
 
         try
         {
-            string oldPath = "";
-            string newPath = "";
-
-            if(_oldPath.Length == 0)
-            {
-                oldPath = AssetDatabase.GetAssetPath(_oldSprite).Replace(_oldSprite.name + ".png", " ");
-            }
-            if(_newPath.Length == 0)
-            {
-                newPath = AssetDatabase.GetAssetPath(_newSprite).Replace(_newSprite.name + ".png", " ");
-            }
+            string oldPath = AssetDatabase.GetAssetPath(_oldSprite).Replace(_oldSprite.name + ".png", " ");
+            string newPath = AssetDatabase.GetAssetPath(_newSprite).Replace(_newSprite.name + ".png", " ");
 
             string[] metafilesPaths = Directory.GetFiles(oldPath, "*.meta", SearchOption.TopDirectoryOnly);
             string[] _oldImagesPath = Directory.GetFiles(oldPath, "*.png", SearchOption.TopDirectoryOnly);
